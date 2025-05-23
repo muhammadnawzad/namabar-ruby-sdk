@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "namabar/version"
+require_relative 'namabar/version'
 
 module Namabar
   class Error < StandardError; end
