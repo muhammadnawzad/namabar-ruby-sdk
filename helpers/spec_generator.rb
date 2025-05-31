@@ -181,15 +181,16 @@ module Helpers
     def build_parameter_comment(param)
       param_name = inflector.underscore(param['name'])
       param_type = param.dig('schema', 'type') || 'String'
+      ruby_type = map_openapi_type_to_rbs(param_type, optional: !param['required'])
       required_text = param['required'] ? 'required' : 'optional'
 
-      "    # @param #{param_name} [#{param_type}] (#{required_text})"
+      "    # @param #{param_name} [#{ruby_type}] (#{required_text})"
     end
 
     # Generate RBS method signature
     #
     # @param method_name [String] name of the method
-    # @param parameters [Hash] method parameters
+    # @param parameters [Hash] method parameters with type and required info
     # @return [String] RBS method signature
     def generate_rbs_signature(method_name, parameters)
       if parameters.empty?
@@ -202,14 +203,18 @@ module Helpers
 
     # Build RBS parameter list string
     #
-    # @param parameters [Hash] method parameters
+    # @param parameters [Hash] method parameters with type and required info
     # @return [String] formatted parameter list
     def build_rbs_parameter_list(parameters)
-      parameters.map do |name, type|
-        if type.start_with?('?')
-          "?#{name}: #{type[1..]}"
-        else
+      parameters.map do |name, info|
+        type = info[:type]
+        required = info[:required]
+
+        if required
           "#{name}: #{type}"
+        else
+          # Optional keyword arguments with nil default
+          "?#{name}: (#{type} | nil)"
         end
       end.join(', ')
     end
@@ -241,32 +246,35 @@ module Helpers
     # Collect and type all parameters for a method
     #
     # @param operation [Hash] OpenAPI operation definition
-    # @return [Hash] parameter name to type mapping
+    # @return [Hash] parameter name to RBS type mapping and required status
     def collect_parameters(operation)
       all_params = operation.fetch('parameters', []) + extract_body_parameters(operation)
 
       all_params.to_h do |param|
         name = inflector.underscore(param['name'])
         type = map_openapi_type_to_rbs(param.dig('schema', 'type'))
-        final_type = param['required'] ? type : "?#{type}"
+        is_required = param['required']
 
-        [name, final_type]
+        [name, { type: type, required: is_required }]
       end
     end
 
-    # Map OpenAPI schema types to RBS types
+    # Map OpenAPI schema types to RBS types, making optional types nilable
     #
     # @param openapi_type [String] OpenAPI schema type
+    # @param optional [Boolean] whether the parameter is optional
     # @return [String] corresponding RBS type
-    def map_openapi_type_to_rbs(openapi_type)
-      case openapi_type
-      when 'integer' then 'Integer'
-      when 'boolean' then 'bool'
-      when 'number' then 'Float'
-      when 'array' then 'Array[untyped]'
-      when 'object' then 'Hash[String, untyped]'
-      else 'String'
-      end
+    def map_openapi_type_to_rbs(openapi_type, optional: false)
+      base_type = case openapi_type
+                  when 'integer' then 'Integer'
+                  when 'boolean' then 'bool'
+                  when 'number' then 'Float'
+                  when 'array' then 'Array[untyped]'
+                  when 'object' then 'Hash[String, untyped]'
+                  else 'String'
+                  end
+
+      optional ? "(#{base_type} | nil)" : base_type
     end
 
     # Extract body parameters from request body schema

@@ -30,9 +30,9 @@ module Namabar
     # @return [HTTParty::Response] the HTTP response object
     #
     # @example
-    #   response = <%= generate_method_name(operation, http_verb, raw_path) %>(<%= collect_parameters(operation).keys.map { |k| "#{k}: 'value'" }.join(', ') %>)
+    #   response = <%= generate_method_name(operation, http_verb, raw_path) %>(<%= collect_parameters(operation).select { |k, v| v[:required] }.keys.map { |k| "#{k}: 'value'" }.join(', ') %>)
     #   puts response.code
-    def <%= generate_method_name(operation, http_verb, raw_path) %>(<%= collect_parameters(operation).keys.map { |k| "#{k}:" }.join(', ') %>)
+    def <%= generate_method_name(operation, http_verb, raw_path) %>(<%= collect_parameters(operation).map { |k, v| v[:required] ? "#{k}:" : "#{k}: nil" }.join(', ') %>)
       url = '<%= raw_path %>'
 <% operation.fetch('parameters', []).select { |p| p['in'] == 'path' }.each do |path_param| -%>
       url = url.gsub('{<%= path_param['name'] %>}', <%= @inflector.underscore(path_param['name']) %>.to_s)
@@ -43,7 +43,7 @@ module Namabar
 <% if query_params.any? -%>
       query_params = {
 <% query_params.each do |qp| -%>
-        <%= @inflector.underscore(qp['name']) %>: <%= @inflector.underscore(qp['name']) %>,
+        '<%= qp['name'] %>' => <%= @inflector.underscore(qp['name']) %>,
 <% end -%>
       }.compact
       opts = opts.merge(query: query_params) unless query_params.empty?
@@ -53,7 +53,7 @@ module Namabar
 <% if body_params.any? -%>
       body_data = {
 <% body_params.each do |bp| -%>
-        <%= bp['name'] %>: <%= @inflector.underscore(bp['name']) %>,
+        '<%= bp['name'] %>' => <%= @inflector.underscore(bp['name']) %>,
 <% end -%>
       }.compact
       

@@ -28,19 +28,19 @@ module Namabar
     # @return [HTTParty::Response] the HTTP response object
     #
     # @example
-    #   response = create_verification_code(to: 'value', locale: 'value', external_id: 'value', code: 'value', service_id: 'value', template_data: 'value')
+    #   response = create_verification_code(to: 'value', service_id: 'value')
     #   puts response.code
-    def create_verification_code(to:, locale:, external_id:, code:, service_id:, template_data:)
+    def create_verification_code(to:, service_id:, locale: nil, external_id: nil, code: nil, template_data: nil)
       url = '/verification-codes'
       opts = default_options
 
       body_data = {
-        to: to,
-        locale: locale,
-        externalId: external_id,
-        code: code,
-        serviceId: service_id,
-        templateData: template_data
+        'to' => to,
+        'locale' => locale,
+        'externalId' => external_id,
+        'code' => code,
+        'serviceId' => service_id,
+        'templateData' => template_data
       }.compact
 
       unless body_data.empty?
@@ -69,7 +69,7 @@ module Namabar
       opts = default_options
 
       body_data = {
-        code: code
+        'code' => code
       }.compact
 
       unless body_data.empty?
@@ -112,19 +112,19 @@ module Namabar
     # @return [HTTParty::Response] the HTTP response object
     #
     # @example
-    #   response = send_message(type: 'value', to: 'value', external_id: 'value', service_id: 'value', text: 'value', template: 'value')
+    #   response = send_message(type: 'value', to: 'value', service_id: 'value')
     #   puts response.code
-    def send_message(type:, to:, external_id:, service_id:, text:, template:)
+    def send_message(type:, to:, service_id:, external_id: nil, text: nil, template: nil)
       url = '/messages'
       opts = default_options
 
       body_data = {
-        type: type,
-        to: to,
-        externalId: external_id,
-        serviceId: service_id,
-        text: text,
-        template: template
+        'type' => type,
+        'to' => to,
+        'externalId' => external_id,
+        'serviceId' => service_id,
+        'text' => text,
+        'template' => template
       }.compact
 
       unless body_data.empty?

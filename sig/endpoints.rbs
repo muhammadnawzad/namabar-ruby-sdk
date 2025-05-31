@@ -1,43 +1,43 @@
 module Namabar
   module Endpoints
     # Create Verification Code
-    # @param to [string] (required)
-    # @param locale [String] (optional)
-    # @param external_id [string] (optional)
-    # @param code [string] (optional)
+    # @param to [String] (required)
+    # @param locale [(String | nil)] (optional)
+    # @param external_id [(String | nil)] (optional)
+    # @param code [(String | nil)] (optional)
     # @param service_id [String] (required)
-    # @param template_data [object] (optional)
+    # @param template_data [(Hash[String, untyped] | nil)] (optional)
     # @return [HTTParty::Response]
-    def create_verification_code: (to: String, ?locale: String, ?external_id: String, ?code: String, service_id: String, ?template_data: Hash[String, untyped]) -> HTTParty::Response
+    def create_verification_code: (to: String, ?locale: (String | nil), ?external_id: (String | nil), ?code: (String | nil), service_id: String, ?template_data: (Hash[String, untyped] | nil)) -> HTTParty::Response
 
     # Verify Verification Code
-    # @param id [string] (required)
-    # @param code [string] (required)
+    # @param id [String] (required)
+    # @param code [String] (required)
     # @return [HTTParty::Response]
     def verify_verification_code: (id: String, code: String) -> HTTParty::Response
 
     # Get Verification Code By Id
-    # @param id [string] (required)
+    # @param id [String] (required)
     # @return [HTTParty::Response]
     def get_verification_code_by_id: (id: String) -> HTTParty::Response
 
     # Send Message
     # @param type [String] (required)
-    # @param to [string] (required)
-    # @param external_id [string] (optional)
+    # @param to [String] (required)
+    # @param external_id [(String | nil)] (optional)
     # @param service_id [String] (required)
-    # @param text [string] (optional)
-    # @param template [String] (optional)
+    # @param text [(String | nil)] (optional)
+    # @param template [(String | nil)] (optional)
     # @return [HTTParty::Response]
-    def send_message: (type: String, to: String, ?external_id: String, service_id: String, ?text: String, ?template: String) -> HTTParty::Response
+    def send_message: (type: String, to: String, ?external_id: (String | nil), service_id: String, ?text: (String | nil), ?template: (String | nil)) -> HTTParty::Response
 
     # Get Message
-    # @param id [string] (required)
+    # @param id [String] (required)
     # @return [HTTParty::Response]
     def get_message: (id: String) -> HTTParty::Response
 
     # Get Message Status
-    # @param id [string] (required)
+    # @param id [String] (required)
     # @return [HTTParty::Response]
     def get_message_status: (id: String) -> HTTParty::Response
   end
