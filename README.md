@@ -2,6 +2,8 @@
 
 A lightweight Ruby SDK for interacting with the Namabar OTP & Messaging API. Provides simple, well-documented methods for each API endpoint with seamless HTTParty integration.
 
+[![Gem Version](https://badge.fury.io/rb/namabar.svg?icon=si%3Arubygems)](https://badge.fury.io/rb/namabar)
+
 ## Features
 
 - **Easy Setup**: Configure API credentials once, use everywhere
