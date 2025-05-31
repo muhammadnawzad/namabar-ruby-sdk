@@ -10,15 +10,15 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Ruby SDK for Namabar OTP verification and messaging API'
   spec.description   = 'A lightweight Ruby SDK providing HTTParty-based client with type definitions for the Namabar OTP verification and messaging platform.'
-  spec.homepage      = 'https://github.com/muhammadnawzad/namabar'
+  spec.homepage      = 'https://github.com/muhammadnawzad/namabar-ruby-sdk'
   spec.license       = 'MIT'
 
   spec.required_ruby_version = '>= 3.1.0'
 
   spec.metadata['homepage_uri']       = spec.homepage
-  spec.metadata['changelog_uri']      = 'https://github.com/muhammadnawzad/namabar/blob/main/CHANGELOG.md'
+  spec.metadata['changelog_uri']      = 'https://github.com/muhammadnawzad/namabar-ruby-sdk/blob/main/CHANGELOG.md'
   spec.metadata['documentation_uri']  = 'https://rubydoc.info/gems/namabar'
-  spec.metadata['bug_tracker_uri']    = 'https://github.com/muhammadnawzad/namabar/issues'
+  spec.metadata['bug_tracker_uri']    = 'https://github.com/muhammadnawzad/namabar-ruby-sdk/issues'
   spec.metadata['allowed_push_host']  = 'https://rubygems.org'
   spec.metadata['rubygems_mfa_required'] = 'true'
 
