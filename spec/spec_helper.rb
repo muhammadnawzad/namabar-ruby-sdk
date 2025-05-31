@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require 'namabar'
+require 'webmock/rspec'
+
+# Disable all external HTTP connections during tests
+WebMock.disable_net_connect!(allow_localhost: true)
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -11,5 +15,15 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  # Reset global configuration before each test
+  config.before do
+    Namabar.configuration = nil
+  end
+
+  # Reset WebMock stubs after each test
+  config.after do
+    WebMock.reset!
   end
 end

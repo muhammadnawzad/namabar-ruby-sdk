@@ -62,7 +62,7 @@ response = client.create_verification_code(
 )
 
 if response.success?
-  verification_id = response.parsed_response['data']['id']
+  verification_id = response.parsed_response['id']
   puts "Verification code sent! ID: #{verification_id}"
 end
 ```
@@ -86,7 +86,7 @@ end
 
 ```ruby
 response = client.get_verification_code_by_id(id: verification_id)
-puts response.parsed_response['data']
+puts response.parsed_response
 ```
 
 ### Messaging
@@ -95,7 +95,7 @@ puts response.parsed_response['data']
 
 ```ruby
 response = client.send_message(
-  type: 'sms',
+  type: 'Text',
   to: '+964751234567',
   service_id: 'your-service-id',
   text: 'Hello from Namabar!',      # optional (for custom text)
@@ -104,7 +104,7 @@ response = client.send_message(
 )
 
 if response.success?
-  message_id = response.parsed_response['data']['id']
+  message_id = response.parsed_response['id']
   puts "Message sent! ID: #{message_id}"
 end
 ```
@@ -113,14 +113,14 @@ end
 
 ```ruby
 response = client.get_message(id: message_id)
-puts response.parsed_response['data']
+puts response.parsed_response
 ```
 
 **Check message status:**
 
 ```ruby
 response = client.get_message_status(id: message_id)
-status = response.parsed_response['data']['status']
+status = response.parsed_response['status']
 puts "Message status: #{status}"
 ```
 
@@ -133,7 +133,7 @@ response = client.create_verification_code(...)
 
 # Check success
 if response.success?
-  data = response.parsed_response['data']
+  data = response.parsed_response
   puts "Success: #{data}"
 else
   puts "Error #{response.code}: #{response.parsed_response['message']}"

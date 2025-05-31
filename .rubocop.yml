@@ -329,3 +329,7 @@ Metrics/MethodLength:
   Max: 18
 Layout/LineLength:
   Max: 160
+RSpec/MultipleExpectations:
+  Max: 5
+RSpec/ExampleLength:
+  Max: 35
