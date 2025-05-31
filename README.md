@@ -1,43 +1,184 @@
-# Namabar
+# Namabar Ruby SDK
 
-TODO: Delete this and the text below, and describe your gem
+A lightweight Ruby SDK for interacting with the Namabar OTP & Messaging API. Provides simple, well-documented methods for each API endpoint with seamless HTTParty integration.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/namabar`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Features
+
+- **Easy Setup**: Configure API credentials once, use everywhere
+- **Complete API Coverage**: All OTP verification and messaging endpoints
+- **Type Safety**: Full RBS type definitions included
+- **Zero Heavy Dependencies**: Just HTTParty and that's it!
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add to your `Gemfile`:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem 'namabar'
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Then run:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+bundle install
+```
+
+Or install directly:
+
+```bash
+gem install namabar
+```
+
+## Configuration
+
+Configure your API credentials before using the client:
+
+```ruby
+Namabar.configure do |config|
+  config.api_key = ENV.fetch('NAMABAR__API_KEY')
+  config.service_id = ENV.fetch('NAMABAR__SERVICE_ID')
+end
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+Create a client and start making API calls:
 
-## Development
+```ruby
+client = Namabar.client
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+### OTP Verification
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+**Create and send a verification code:**
 
-## Contributing
+```ruby
+response = client.create_verification_code(
+  to: '+964751234567',
+  service_id: 'your-service-id',
+  locale: 'en',                    # optional
+  external_id: 'user-123',         # optional
+  template_data: { name: 'John' }  # optional
+)
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/namabar. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/namabar/blob/master/CODE_OF_CONDUCT.md).
+if response.success?
+  verification_id = response.parsed_response['data']['id']
+  puts "Verification code sent! ID: #{verification_id}"
+end
+```
+
+**Verify the code:**
+
+```ruby
+response = client.verify_verification_code(
+  id: verification_id,
+  code: '123456'
+)
+
+if response.success?
+  puts "Code verified successfully!"
+else
+  puts "Verification failed: #{response.parsed_response['message']}"
+end
+```
+
+**Get verification code details:**
+
+```ruby
+response = client.get_verification_code_by_id(id: verification_id)
+puts response.parsed_response['data']
+```
+
+### Messaging
+
+**Send a message:**
+
+```ruby
+response = client.send_message(
+  type: 'sms',
+  to: '+964751234567',
+  service_id: 'your-service-id',
+  text: 'Hello from Namabar!',      # optional (for custom text)
+  template: 'welcome_template',     # optional (for templates)
+  external_id: 'msg-456'           # optional
+)
+
+if response.success?
+  message_id = response.parsed_response['data']['id']
+  puts "Message sent! ID: #{message_id}"
+end
+```
+
+**Get message details:**
+
+```ruby
+response = client.get_message(id: message_id)
+puts response.parsed_response['data']
+```
+
+**Check message status:**
+
+```ruby
+response = client.get_message_status(id: message_id)
+status = response.parsed_response['data']['status']
+puts "Message status: #{status}"
+```
+
+### Response Handling
+
+All methods return `HTTParty::Response` objects:
+
+```ruby
+response = client.create_verification_code(...)
+
+# Check success
+if response.success?
+  data = response.parsed_response['data']
+  puts "Success: #{data}"
+else
+  puts "Error #{response.code}: #{response.parsed_response['message']}"
+end
+
+# Access raw response
+puts response.body
+puts response.headers
+puts response.code
+```
+
+### Error Handling
+
+```ruby
+begin
+  response = client.create_verification_code(...)
+rescue Namabar::Error => e
+  puts "Namabar SDK error: #{e.message}"
+rescue => e
+  puts "General error: #{e.message}"
+end
+```
+
+## API Reference
+
+The SDK provides these methods corresponding to Namabar API endpoints:
+
+**OTP Verification:**
+
+- `create_verification_code(to:, service_id:, **options)` - Create and send OTP
+- `verify_verification_code(id:, code:)` - Verify OTP code  
+- `get_verification_code_by_id(id:)` - Get verification details
+
+**Messaging:**
+
+- `send_message(type:, to:, service_id:, **options)` - Send message
+- `get_message(id:)` - Get message details
+- `get_message_status(id:)` - Get message status
+
+All methods return `HTTParty::Response` objects with the API response.
+
+## Development & Contributing
+
+Please refer to the [Development](/helpers/README.md) file for more information. Also, please refer to the [Contributing](/CONTRIBUTING.md) file for contributing to the project.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Namabar project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/namabar/blob/master/CODE_OF_CONDUCT.md).
+Released under the MIT License. See [LICENSE](LICENSE.txt) for details.

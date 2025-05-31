@@ -319,3 +319,13 @@ Performance/ZipWithoutBlock: # new in 1.24
   Enabled: true
 RSpec/IncludeExamples: # new in 3.6
   Enabled: true
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Metrics/ParameterLists:
+  Max: 6
+Metrics/MethodLength:
+  Max: 18
+Layout/LineLength:
+  Max: 160

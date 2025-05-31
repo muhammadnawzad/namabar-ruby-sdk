@@ -1,0 +1,72 @@
+# frozen_string_literal: true
+
+module Namabar
+  # One to one mapping of API endpoint methods from OpenAPI specification
+  #
+  # This module contains methods that correspond to API endpoints defined
+  # in the OpenAPI spec. Each method provides a convenient Ruby interface to the HTTP endpoints.
+  #
+  # All methods return HTTParty::Response objects which can be used to
+  # access response data, status codes, headers, etc.
+  #
+  # @example Basic usage
+  #   client = Namabar::Client.new
+  #   response = client.some_endpoint(param: 'value')
+  #   puts response.code
+  #   puts response.body
+  module Endpoints
+<% @spec.fetch('paths', {}).each do |raw_path, path_item| -%>
+<% path_item.each do |http_verb, operation| -%>
+
+    # <%= operation['summary'] || operation['operationId'] || "#{http_verb.upcase} #{raw_path}" %>
+    #
+<% if operation['description'] -%>
+    # <%= operation['description'].gsub(/\n/, "\n    # ") %>
+    #
+<% end -%>
+<% (operation.fetch('parameters', []) + extract_body_parameters(operation)).each do |param| -%>
+    # @param <%= @inflector.underscore(param['name']) %> [<%= param.dig('schema','type') || 'String' %>] <%= param['description'] ? param['description'].strip : '' %> (<%= param['required'] ? 'required' : 'optional' %>)
+<% end -%>
+    # @return [HTTParty::Response] the HTTP response object
+    #
+    # @example
+    #   response = <%= generate_method_name(operation, http_verb, raw_path) %>(<%= collect_parameters(operation).keys.map { |k| "#{k}: 'value'" }.join(', ') %>)
+    #   puts response.code
+    def <%= generate_method_name(operation, http_verb, raw_path) %>(<%= collect_parameters(operation).keys.map { |k| "#{k}:" }.join(', ') %>)
+      url = '<%= raw_path %>'
+<% operation.fetch('parameters', []).select { |p| p['in'] == 'path' }.each do |path_param| -%>
+      url = url.gsub('{<%= path_param['name'] %>}', <%= @inflector.underscore(path_param['name']) %>.to_s)
+<% end -%>
+      opts = default_options
+
+<% query_params = operation.fetch('parameters', []).select { |p| p['in'] == 'query' } -%>
+<% if query_params.any? -%>
+      query_params = {
+<% query_params.each do |qp| -%>
+        <%= @inflector.underscore(qp['name']) %>: <%= @inflector.underscore(qp['name']) %>,
+<% end -%>
+      }.compact
+      opts = opts.merge(query: query_params) unless query_params.empty?
+
+<% end -%>
+<% body_params = extract_body_parameters(operation) -%>
+<% if body_params.any? -%>
+      body_data = {
+<% body_params.each do |bp| -%>
+        <%= bp['name'] %>: <%= @inflector.underscore(bp['name']) %>,
+<% end -%>
+      }.compact
+      
+      unless body_data.empty?
+        opts = opts.merge(body: body_data.to_json)
+        opts[:headers] ||= {}
+        opts[:headers]['Content-Type'] = 'application/json'
+      end
+
+<% end -%>
+      self.class.<%= http_verb.downcase %>(url, opts)
+    end
+<% end -%>
+<% end -%>
+  end
+end 

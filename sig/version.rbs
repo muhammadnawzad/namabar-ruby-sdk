@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Namabar
   # The current version of the Namabar gem
   #
@@ -13,5 +11,5 @@ module Namabar
   #   puts Namabar::VERSION # => "0.1.0"
   #
   # @see https://semver.org/ Semantic Versioning specification
-  VERSION = '0.1.0'
-end
+  VERSION: String
+end 

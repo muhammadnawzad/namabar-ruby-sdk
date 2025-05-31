@@ -1,4 +1,70 @@
+# The main Namabar module providing convenient access to the Namabar API
+#
+# This module serves as the primary entry point for the Namabar gem, offering:
+# - Global configuration management
+# - Client creation and management
+# - Error handling for the entire gem
+#
+# @example Basic usage
+#   Namabar.configure do |config|
+#     config.api_key = ENV.fetch('NAMABAR__API_KEY', nil)
+#     config.service_id = ENV.fetch('NAMABAR_SERVICE_ID', nil)
+#   end
+#
+#   client = Namabar.client
+#   response = client.send_message(...)
+#
+# @see Client
+# @see Configuration
 module Namabar
-  VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+  # Base error class for all Namabar-related errors
+  #
+  # All errors raised by the Namabar gem inherit from this class,
+  # making it easy to rescue all gem-related errors with a single rescue clause.
+  #
+  # @example Rescuing all Namabar errors
+  #   begin
+  #     client.send_message(...)
+  #   rescue Namabar::Error => e
+  #     puts "Namabar error: #{e.message}"
+  #   end
+  class Error < StandardError
+  end
+
+  # @return [Configuration, nil] the current global configuration instance
+  attr_accessor self.configuration: Configuration?
+
+  # Configure the Namabar gem globally
+  #
+  # This method allows you to set global configuration options that will be
+  # used by all Client instances unless overridden. The configuration is
+  # yielded to the provided block for modification.
+  #
+  # @yield [config] Yields the configuration object for modification
+  # @yieldparam config [Configuration] the configuration instance to modify
+  # @return [Configuration] the configured Configuration instance
+  #
+  # @example Configure API credentials
+  #   Namabar.configure do |config|
+  #     config.api_key = ENV.fetch('NAMABAR__API_KEY', nil)
+  #     config.service_id = ENV.fetch('NAMABAR_SERVICE_ID', nil)
+  #   end
+  #
+  # @see Configuration
+  def self.configure: () { (Configuration) -> void } -> Configuration
+
+  # Create a new Namabar API client
+  #
+  # Creates and returns a new Client instance using the global configuration.
+  # This is a convenience method equivalent to calling Client.new directly.
+  #
+  # @param args [Array] arguments to pass to the Client constructor (currently none accepted)
+  # @return [Client] a new configured client instance
+  #
+  # @example Create a client
+  #   client = Namabar.client
+  #   response = client.send_message(...)
+  #
+  # @see Client#initialize
+  def self.client: (*untyped args) -> Client
 end
