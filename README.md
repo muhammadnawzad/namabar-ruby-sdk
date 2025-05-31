@@ -176,7 +176,7 @@ All methods return `HTTParty::Response` objects with the API response.
 
 ## Development & Contributing
 
-Please refer to the [Development](/helpers/README.md) file for more information. Also, please refer to the [Contributing](/CONTRIBUTING.md) file for contributing to the project.
+Please refer to the [Development](/helpers/README.md) file for more information.
 
 ## License
 
