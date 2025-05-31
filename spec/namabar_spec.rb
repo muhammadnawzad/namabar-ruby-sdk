@@ -21,11 +21,9 @@ RSpec.describe Namabar do
     it 'yields the configuration for modification' do
       namabar.configure do |config|
         config.api_key = 'test-api-key'
-        config.service_id = 'test-service-id'
       end
 
       expect(namabar.configuration.api_key).to eq('test-api-key')
-      expect(namabar.configuration.service_id).to eq('test-service-id')
     end
 
     it 'returns the configuration instance' do
@@ -50,7 +48,6 @@ RSpec.describe Namabar do
     before do
       namabar.configure do |config|
         config.api_key = 'test-api-key'
-        config.service_id = 'test-service-id'
       end
     end
 

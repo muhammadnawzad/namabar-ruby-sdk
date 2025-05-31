@@ -15,7 +15,6 @@ require 'namabar/endpoints'
 # @example Basic usage
 #   Namabar.configure do |config|
 #     config.api_key = 'your-api-key'
-#     config.service_id = 'your-service-id'
 #   end
 #
 #   client = Namabar.client
@@ -55,7 +54,6 @@ module Namabar
   # @example Configure API credentials
   #   Namabar.configure do |config|
   #     config.api_key = ENV['NAMABAR_API_KEY']
-  #     config.service_id = ENV['NAMABAR_SERVICE_ID']
   #   end
   #
   # @see Configuration

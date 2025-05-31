@@ -2,12 +2,10 @@
 
 RSpec.describe Namabar::Client do
   let(:api_key) { 'test-api-key' }
-  let(:service_id) { 'test-service-id' }
 
   before do
     Namabar.configure do |config|
       config.api_key = api_key
-      config.service_id = service_id
     end
   end
 

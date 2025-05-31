@@ -8,7 +8,6 @@
 # @example Basic usage
 #   Namabar.configure do |config|
 #     config.api_key = ENV.fetch('NAMABAR__API_KEY', nil)
-#     config.service_id = ENV.fetch('NAMABAR_SERVICE_ID', nil)
 #   end
 #
 #   client = Namabar.client
@@ -47,7 +46,6 @@ module Namabar
   # @example Configure API credentials
   #   Namabar.configure do |config|
   #     config.api_key = ENV.fetch('NAMABAR__API_KEY', nil)
-  #     config.service_id = ENV.fetch('NAMABAR_SERVICE_ID', nil)
   #   end
   #
   # @see Configuration

@@ -6,7 +6,6 @@ RSpec.describe Namabar::Endpoints do
   let(:client) do
     Namabar.configure do |config|
       config.api_key = api_key
-      config.service_id = service_id
     end
     Namabar.client
   end

@@ -14,7 +14,6 @@ module Namabar
   #   # Configure globally first
   #   Namabar.configure do |config|
   #     config.api_key = 'your-api-key'
-  #     config.service_id = 'your-service-id'
   #   end
   #
   #   # Create and use client

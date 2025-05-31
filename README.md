@@ -36,7 +36,6 @@ Configure your API credentials before using the client:
 ```ruby
 Namabar.configure do |config|
   config.api_key = ENV.fetch('NAMABAR__API_KEY')
-  config.service_id = ENV.fetch('NAMABAR__SERVICE_ID')
 end
 ```
 

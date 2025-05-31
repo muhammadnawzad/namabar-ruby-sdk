@@ -10,12 +10,10 @@ module Namabar
   # @example Configure with API credentials
   #   config = Namabar::Configuration.new
   #   config.api_key = ENV.fetch('NAMABAR__API_KEY', nil)
-  #   config.service_id = ENV.fetch('NAMABAR__SERVICE_ID', nil)
   #
   # @example Configure using the global configuration
   #   Namabar.configure do |config|
   #     config.api_key = 'your-api-key'
-  #     config.service_id = 'your-default-service-id'
   #   end
   #
   # @see Namabar.configure
@@ -24,12 +22,6 @@ module Namabar
     # @example Set API key
     #   config.api_key = '1234567890abcdef'
     attr_accessor :api_key
-
-    # @return [String, nil] the default service ID to use for API operations
-    # @note This can be overridden on a per-request basis for most endpoints
-    # @example Set service ID
-    #   config.service_id = 'sms-service-production'
-    attr_accessor :service_id
   end
 
   class << self
@@ -49,13 +41,11 @@ module Namabar
     # @example Basic configuration
     #   Namabar.configure do |config|
     #     config.api_key = ENV.fetch('NAMABAR__API_KEY', nil)
-    #     config.service_id = ENV.fetch('NAMABAR_SERVICE_ID', nil)
     #   end
     #
     # @example Configuration with validation
     #   Namabar.configure do |config|
     #     config.api_key = ENV.fetch('NAMABAR_API_KEY') { raise 'API key required' }
-    #     config.service_id = ENV.fetch('NAMABAR_SERVICE_ID') { raise 'Service ID required' }
     #   end
     #
     # @see Configuration
